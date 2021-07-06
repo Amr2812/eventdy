@@ -15,3 +15,9 @@ module.exports.getProfile = (req, res) => {
     })
     .catch(err => res.send(err));
 };
+
+module.exports.updateProfile = (req, res) => {
+  User.findByIdAndUpdate(req.params.id, req.body)
+    .then(doc => res.json(doc))
+    .catch(err => res.send(err));
+};
