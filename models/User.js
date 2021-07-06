@@ -1,18 +1,24 @@
 const mongoose = require("mongoose");
 
+const miniEventSchema = mongoose.Schema({
+  title: {
+    type: String
+  },
+  about: {
+    type: String
+  }
+});
+
 const userSchema = mongoose.Schema({
   email: {
     type: String,
-    required: true,
     unique: true
   },
   password: {
-    type: String,
-    required: true
+    type: String
   },
   username: {
-    type: String,
-    required: true
+    type: String
   },
   image_url: {
     type: String
@@ -24,18 +30,8 @@ const userSchema = mongoose.Schema({
     type: Date,
     default: Date.now()
   },
-  events_created: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Event"
-    }
-  ],
-  events_attended: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Event"
-    }
-  ]
+  events_created: [miniEventSchema],
+  events_attended: [miniEventSchema]
 });
 
 const User = mongoose.model("User", userSchema);

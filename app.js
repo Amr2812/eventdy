@@ -11,6 +11,7 @@ require("./config/passport")(passport);
 
 const authRouter = require("./routes/auth.route");
 const userRouter = require("./routes/user.route");
+const eventRouter = require("./routes/event.route");
 
 const app = express();
 
@@ -57,5 +58,6 @@ app.use(cookieParser());
 
 app.use("/", authRouter);
 app.use("/", userRouter);
+app.use("/", eventRouter);
 
 module.exports = app;

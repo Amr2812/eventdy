@@ -1,33 +1,33 @@
 const mongoose = require("mongoose");
 
-const eventSchema = mongoose.Schema({
-  organizer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+const miniUserSchema = mongoose.Schema({
+  username: {
+    type: String
   },
+  image_url: {
+    type: String
+  },
+  bio: {
+    type: String
+  }
+});
+
+const eventSchema = mongoose.Schema({
+  organizer: miniUserSchema,
   title: {
     type: String,
-    required: true,
     unique: true
   },
   about: {
     type: String,
-    required: true
   },
   location: {
     type: String,
-    required: true
   },
   date: {
     type: Date,
-    required: true
   },
-  attenders: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
-    }
-  ]
+  attenders: [miniUserSchema]
 });
 
 const Event = mongoose.model("Event", eventSchema);
