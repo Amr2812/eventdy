@@ -13,11 +13,11 @@ module.exports.getProfile = (req, res) => {
         events_attended: user.events_attended
       });
     })
-    .catch(err => res.send(err));
+    .catch(err => res.status(404).send("User not found!"));
 };
 
 module.exports.updateProfile = (req, res) => {
   User.findByIdAndUpdate(req.params.id, req.body)
     .then(doc => res.json(doc))
-    .catch(err => res.send(err));
+    .catch(err => res.status(404).send("User not found!"));
 };

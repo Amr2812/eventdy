@@ -5,14 +5,14 @@ module.exports.newEvent = async (req, res) => {
   const { organizer_id, title, about, location, date } = req.body;
 
   if (!(organizer_id && title && about && location && date)) {
-    res.json({ msg: "You have to fill all fields!" });
+    res.status(500).send("You have to fill all fields!");
     return;
   }
 
   try {
     const eventCheck = await Event.findOne({ title });
     if (eventCheck) {
-      res.json({ msg: "Event name already exist!" });
+      res.status(500).send("Event name already exist!");
       return;
     }
 

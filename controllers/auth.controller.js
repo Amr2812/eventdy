@@ -8,7 +8,7 @@ module.exports.login = (req, res, next) => {
       return next(err);
     }
     if (!user) {
-      return res.send({ error: "Incorrect email or password" });
+      return res.send(404).send("Incorrect email or password");
     }
     req.logIn(user, err => {
       if (err) {
