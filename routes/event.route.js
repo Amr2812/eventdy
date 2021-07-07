@@ -6,6 +6,8 @@ const { requireAuth } = require("../middleware/auth");
 
 router.post("/event", requireAuth, eventController.newEvent);
 
-router.route("/event/:id").get(eventController.getEvent);
+router.get("/event/:id", eventController.getEvent);
+
+router.patch("/event/:id", eventController.updateEvent);
 
 module.exports = router;

@@ -2,9 +2,9 @@ const Event = require("../models/Event");
 const User = require("../models/User");
 
 module.exports.newEvent = async (req, res) => {
-  const { organizer_id, title, about, location, date } = req.body;
+  const { title, about, location, date } = req.body;
 
-  if (!(organizer_id && title && about && location && date)) {
+  if (!(title && about && location && date)) {
     res.status(500).send("You have to fill all fields!");
     return;
   }
@@ -16,7 +16,7 @@ module.exports.newEvent = async (req, res) => {
       return;
     }
 
-    const user = await User.findById(organizer_id);
+    const user = await User.findById(req.user.id);
 
     const event = new Event({
       title,
@@ -41,4 +41,21 @@ module.exports.getEvent = (req, res) => {
   Event.findById(req.params.id)
     .then(event => res.json(event))
     .catch(err => res.send(err));
+};
+
+module.exports.updateEvent = async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id);
+
+    if (event.organizer._id != req.user.id) {
+      res.status(401).send("Unauthorized to edit the event!");
+      return;
+    }
+
+    const updatedEvent = await Event.findByIdAndUpdate(event._id, req.body, { new: true });
+
+    res.send(updatedEvent);
+  } catch (err) {
+    res.status(404).send("Event not found!");
+  }
 };

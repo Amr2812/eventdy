@@ -8,7 +8,7 @@ module.exports.login = (req, res, next) => {
       return next(err);
     }
     if (!user) {
-      return res.send(404).send("Incorrect email or password");
+      return res.status(404).send("Incorrect email or password");
     }
     req.logIn(user, err => {
       if (err) {
@@ -20,7 +20,8 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.signup = (req, res, next) => {
-  const { email, password, confirmPassword, username, image_url, bio } = req.body;
+  const { email, password, confirmPassword, username, image_url, bio } =
+    req.body;
   let errors = [];
 
   function validateEmail(email) {
@@ -30,7 +31,7 @@ module.exports.signup = (req, res, next) => {
   }
 
   if (!validateEmail(email)) {
-    errors.push({ msg: "The Email is not valid!" })
+    errors.push({ msg: "The Email is not valid!" });
   }
 
   if (password !== confirmPassword) {
@@ -39,6 +40,10 @@ module.exports.signup = (req, res, next) => {
 
   if (password.length < 6) {
     errors.push({ msg: "Password should be at least 6 characters!" });
+  }
+
+  if (!username) {
+    errors.push({ msg: "Username is required!" })
   }
 
   if (errors.length > 0) {
@@ -80,4 +85,5 @@ module.exports.signup = (req, res, next) => {
 
 module.exports.logout = (req, res, next) => {
   req.logout();
+  res.send("Logged out!");
 };
