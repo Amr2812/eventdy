@@ -2,9 +2,9 @@ const Event = require("../models/Event");
 const User = require("../models/User");
 
 module.exports.newEvent = async (req, res) => {
-  const { title, about, location, date } = req.body;
+  const { title, about, location, date, category } = req.body;
 
-  if (!(title && about && location && date)) {
+  if (!(title && about && location && date && category)) {
     res.status(500).send("You have to fill all fields!");
     return;
   }
@@ -23,6 +23,7 @@ module.exports.newEvent = async (req, res) => {
       about,
       location,
       date,
+      category,
       organizer: user
     });
 
@@ -84,9 +85,9 @@ module.exports.attendEvent = async (req, res) => {
     });
 
     user.events_attended.push(event);
-    await user.save()
+    await user.save();
 
-    res.send("success!")
+    res.send("success!");
   } catch (err) {
     res.send("Couldn't find Event!");
   }
