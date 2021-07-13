@@ -48,39 +48,42 @@ module.exports.signup = (req, res, next) => {
 
   if (errors.length > 0) {
     res.json({ errors });
-  } else {
-    User.findOne({ email }).then(user => {
-      if (user) {
-        errors.push({ msg: "This email is already registered!" });
-        res.json({ errors });
-      } else {
-        const newUser = new User({
-          email,
-          password,
-          username,
-          image_url,
-          bio
-        });
-        bcrypt.genSalt(10, (err, salt) => {
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
-            if (err) throw err;
-            newUser.password = hash;
-            newUser
-              .save()
-              .then(user => {
-                res.json(user);
-              })
-              .catch(err => console.log(err));
-          });
-        });
-        req.login(newUser, err => {
-          if (err) {
-            return next(err);
-          }
-        });
+    return;
+  }
+
+  User.findOne({ email }).then(user => {
+    if (user) {
+      errors.push({ msg: "This email is already registered!" });
+      res.send({ errors });
+      return;
+    }
+
+    const newUser = new User({
+      email,
+      password,
+      username,
+      image_url,
+      bio
+    });
+
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(newUser.password, salt, (err, hash) => {
+        if (err) throw err;
+        newUser.password = hash;
+        newUser
+          .save()
+          .then(user => {
+            res.json(user);
+          })
+          .catch(err => console.log(err));
+      });
+    });
+    req.login(newUser, err => {
+      if (err) {
+        return next(err);
       }
     });
-  }
+  });
 };
 
 module.exports.logout = (req, res, next) => {

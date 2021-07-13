@@ -3,7 +3,7 @@ const User = require("../models/User");
 module.exports.getUserProfile = (req, res) => {
   User.findById(req.user.id)
     .then(user => {
-      res.json({
+      res.send({
         email: user.email,
         username: user.username,
         image_url: user.image_url,
@@ -19,7 +19,7 @@ module.exports.getUserProfile = (req, res) => {
 module.exports.getProfile = (req, res) => {
   User.findById(req.params.id)
     .then(user => {
-      res.json({
+      res.send({
         email: user.email,
         username: user.username,
         image_url: user.image_url,
@@ -34,6 +34,6 @@ module.exports.getProfile = (req, res) => {
 
 module.exports.updateProfile = (req, res) => {
   User.findByIdAndUpdate(req.user.id, req.body, { new: true })
-    .then(doc => res.json(doc))
+    .then(doc => res.send(doc))
     .catch(err => res.status(404).send("User not found!"));
 };

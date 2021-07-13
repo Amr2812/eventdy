@@ -89,6 +89,6 @@ module.exports.attendEvent = async (req, res) => {
 
     res.send("success!");
   } catch (err) {
-    res.send("Couldn't find Event!");
+    res.status(404).send("Couldn't find Event!");
   }
 };
