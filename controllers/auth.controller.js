@@ -39,11 +39,11 @@ module.exports.signup = (req, res, next) => {
   }
 
   if (password.length < 6) {
-    errors.push({ msg: "Password should be at least 6 characters!" });
+    errors.push({ msg: "Password should be more than 6 characters!" });
   }
 
   if (!username) {
-    errors.push({ msg: "Username is required!" })
+    errors.push({ msg: "Username is required!" });
   }
 
   if (errors.length > 0) {

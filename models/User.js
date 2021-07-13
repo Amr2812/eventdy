@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
 const miniEventSchema = mongoose.Schema({
+  _id: {
+    type: mongoose.Types.ObjectId
+  },
   title: {
     type: String
   },

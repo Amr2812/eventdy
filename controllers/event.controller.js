@@ -31,15 +31,21 @@ module.exports.newEvent = async (req, res) => {
     user.events_created.push(event);
     await user.save();
 
-    res.json(doc);
+    res.send(doc);
   } catch (err) {
     res.send(err);
   }
 };
 
-module.exports.getEvent = (req, res) => {
-  Event.findById(req.params.id)
-    .then(event => res.json(event))
+module.exports.getEventDetails = (req, res) => {
+  Event.findById(req.params.id, "-attenders")
+    .then(event => res.send(event))
+    .catch(err => res.send(err));
+};
+
+module.exports.getEventAttenders = (req, res) => {
+  Event.findById(req.params.id, "attenders")
+    .then(event => res.send(event))
     .catch(err => res.send(err));
 };
 
@@ -52,10 +58,36 @@ module.exports.updateEvent = async (req, res) => {
       return;
     }
 
-    const updatedEvent = await Event.findByIdAndUpdate(event._id, req.body, { new: true });
+    const updatedEvent = await Event.findByIdAndUpdate(event._id, req.body, {
+      new: true
+    });
 
     res.send(updatedEvent);
   } catch (err) {
     res.status(404).send("Event not found!");
+  }
+};
+
+module.exports.attendEvent = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    const event = await Event.findByIdAndUpdate(req.params.eventId, {
+      $push: {
+        attenders: {
+          _id: user._id,
+          image_url: user.image_url,
+          username: user.username,
+          bio: user.bio
+        }
+      }
+    });
+
+    user.events_attended.push(event);
+    await user.save()
+
+    res.send("success!")
+  } catch (err) {
+    res.send("Couldn't find Event!");
   }
 };

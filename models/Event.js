@@ -1,10 +1,13 @@
 const mongoose = require("mongoose");
 
 const miniUserSchema = mongoose.Schema({
-  username: {
-    type: String
+  _id: {
+    type: mongoose.Types.ObjectId
   },
   image_url: {
+    type: String
+  },
+  username: {
     type: String
   },
   bio: {
