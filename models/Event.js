@@ -30,6 +30,9 @@ const eventSchema = mongoose.Schema({
   date: {
     type: Date,
   },
+  endingDate: {
+    type: Date,
+  },
   category: {
     type: String
   },

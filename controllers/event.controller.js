@@ -2,9 +2,9 @@ const Event = require("../models/Event");
 const User = require("../models/User");
 
 module.exports.newEvent = async (req, res) => {
-  const { title, about, location, date, category } = req.body;
+  const { title, about, location, date, endingDate, category } = req.body;
 
-  if (!(title && about && location && date && category)) {
+  if (!(title && about && location && date && endingDate && category)) {
     res.status(500).send("You have to fill all fields!");
     return;
   }
@@ -16,20 +16,21 @@ module.exports.newEvent = async (req, res) => {
       return;
     }
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id, "-eventsCreated -eventsAttended -password");
 
     const event = new Event({
       title,
       about,
       location,
       date,
+      endingDate,
       category,
       organizer: user
     });
 
     const doc = await event.save();
 
-    user.events_created.push(event);
+    user.eventsCreated.push(event);
     await user.save();
 
     res.send(doc);
@@ -84,7 +85,7 @@ module.exports.attendEvent = async (req, res) => {
       }
     });
 
-    user.events_attended.push(event);
+    user.eventsAttended.push(event);
     await user.save();
 
     res.send("success!");

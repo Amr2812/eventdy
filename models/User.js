@@ -33,8 +33,8 @@ const userSchema = mongoose.Schema({
     type: Date,
     default: Date.now()
   },
-  events_created: [miniEventSchema],
-  events_attended: [miniEventSchema]
+  eventsCreated: [miniEventSchema],
+  eventsAttended: [miniEventSchema]
 });
 
 const User = mongoose.model("User", userSchema);
