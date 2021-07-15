@@ -10,13 +10,13 @@ module.exports.newEvent = async (req, res) => {
   }
 
   try {
-    const eventCheck = await Event.findOne({ title });
+    const eventCheck = await Event.findOne({ title }, { _id: 1 });
     if (eventCheck) {
       res.status(500).send("Event name already exist!");
       return;
     }
 
-    const user = await User.findById(req.user.id, "-eventsCreated -eventsAttended -password");
+    const user = await User.findById(req.user.id, { eventsCreated: 0, eventsAttended: 0, password: 0 });
 
     const event = new Event({
       title,
@@ -40,13 +40,13 @@ module.exports.newEvent = async (req, res) => {
 };
 
 module.exports.getEventDetails = (req, res) => {
-  Event.findById(req.params.id, "-attenders")
+  Event.findById(req.params.id, { attenders: 0 })
     .then(event => res.send(event))
     .catch(err => res.send(err));
 };
 
 module.exports.getEventAttenders = (req, res) => {
-  Event.findById(req.params.id, "attenders")
+  Event.findById(req.params.id, { attenders: 1 })
     .then(event => res.send(event))
     .catch(err => res.send(err));
 };

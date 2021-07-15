@@ -51,7 +51,7 @@ module.exports.signup = (req, res, next) => {
     return;
   }
 
-  User.findOne({ email }).then(user => {
+  User.findOne({ email }, { _id: 1 }).then(user => {
     if (user) {
       errors.push({ msg: "This email is already registered!" });
       res.send({ errors });
