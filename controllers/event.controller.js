@@ -53,18 +53,16 @@ module.exports.getEventAttenders = (req, res) => {
 
 module.exports.updateEvent = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id);
+    const event = await Event.findById(req.params.id, { organizer: 1 });
 
     if (event.organizer._id != req.user.id) {
       res.status(401).send("Unauthorized to edit the event!");
       return;
     }
 
-    const updatedEvent = await Event.findByIdAndUpdate(event._id, req.body, {
-      new: true
-    });
+    await Event.findByIdAndUpdate(event._id, req.body);
 
-    res.send(updatedEvent);
+    res.send("Event Updated");
   } catch (err) {
     res.status(404).send("Event not found!");
   }
