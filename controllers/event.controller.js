@@ -16,7 +16,11 @@ module.exports.newEvent = async (req, res) => {
       return;
     }
 
-    const user = await User.findById(req.user.id, { eventsCreated: 0, eventsAttended: 0, password: 0 });
+    const user = await User.findById(req.user.id, {
+      eventsCreated: 0,
+      eventsAttended: 0,
+      password: 0
+    });
 
     const event = new Event({
       title,
@@ -37,6 +41,55 @@ module.exports.newEvent = async (req, res) => {
   } catch (err) {
     res.send(err);
   }
+};
+
+module.exports.getEvents = (req, res) => {
+  const { search, categories } = req.query;
+  let { page } = req.query;
+
+  if (!page) page = 1;
+
+  const query = [
+    {
+      $match: {}
+    },
+    {
+      $sort: {
+        date: 1
+      }
+    },
+    {
+      $skip: page > 1 ? page * 20 : 0
+    },
+    {
+      $limit: 20
+    },
+    {
+      $project: {
+        attenders: 0
+      }
+    }
+  ];
+
+  if (categories) {
+    query[0].$match.category = {
+      $in: categories
+    };
+  }
+
+  if (search) {
+    query[0].$match.$text = {
+      $search: search
+    };
+
+    query[1].$sort.score = {
+      $meta: "textScore"
+    };
+  }
+
+  Event.aggregate(query)
+    .then(events => res.send(events))
+    .catch(err => res.status(500).send(err));
 };
 
 module.exports.getEventDetails = (req, res) => {
