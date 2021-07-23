@@ -71,7 +71,7 @@ module.exports.getEvents = (req, res) => {
     }
   ];
 
-  if (categories) {
+  if (categories && categories.length > 1) {
     query[0].$match.category = {
       $in: categories
     };
