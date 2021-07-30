@@ -17,7 +17,6 @@ module.exports.newEvent = async (req, res) => {
     }
 
     const user = await User.findById(req.user.id, {
-      eventsCreated: 0,
       eventsAttended: 0,
       password: 0
     });
