@@ -19,6 +19,32 @@ const app = express();
 
 app.set("trust proxy", 1);
 
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Eventdy API",
+      version: "1.0.0",
+      description: "Eventdy is an event discovering app"
+    },
+    servers: [
+      {
+        url: "http://localhost:3000",
+        description: "Development Server"
+      },
+      {
+        url: "https://eventdy.herokuapp.com",
+        description: "Production Server"
+      }
+    ]
+  },
+  apis: ["./routes/*.route.js", "./models/*.js"]
+};
+
+const specs = swaggerJsDoc(options);
+
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(specs));
+
 // DB Config
 mongoose
   .connect(process.env.MONGO_URI, {

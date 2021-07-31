@@ -14,6 +14,7 @@ module.exports.getProfile = (req, res) => {
 
 module.exports.updateProfile = (req, res) => {
   User.findByIdAndUpdate(req.user.id, req.body, { new: true })
+    .populate({ password: 0 })
     .then(doc => res.send(doc))
     .catch(err => res.status(404).send("User not found!"));
 };

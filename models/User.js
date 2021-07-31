@@ -1,5 +1,20 @@
 const mongoose = require("mongoose");
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    miniEvent:
+ *      type: object
+ *      properties:
+ *        _id:
+ *          type: objectId
+ *        title:
+ *          type: string
+ *        about:
+ *          type: string
+ */
+
 const miniEventSchema = mongoose.Schema({
   _id: {
     type: mongoose.Types.ObjectId
@@ -11,6 +26,40 @@ const miniEventSchema = mongoose.Schema({
     type: String
   }
 });
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    User:
+ *      type: object
+ *      required:
+ *        - email
+ *        - password
+ *      properties:
+ *        _id:
+ *          type: objectId 
+ *        email:
+ *          type: string
+ *        password:
+ *          type: string
+ *        username:
+ *          type: string
+ *        image_url:
+ *          type: string
+ *        bio:
+ *          type: string
+ *        date:
+ *          type: date
+ *        eventsCreated:
+ *          type: array
+ *          items: 
+ *            $ref: "#/components/schemas/miniEvent"
+ *        eventsAttended:
+ *          type: array
+ *          items:
+ *            $ref: "#/components/schemas/miniEvent"
+ */
 
 const userSchema = mongoose.Schema({
   email: {
