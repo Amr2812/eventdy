@@ -2,23 +2,6 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const passport = require("passport");
 
-module.exports.login = (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.status(404).send("Incorrect email or password");
-    }
-    req.logIn(user, err => {
-      if (err) {
-        return next(err);
-      }
-      return res.send(user);
-    });
-  })(req, res, next);
-};
-
 module.exports.signup = (req, res, next) => {
   const { email, password, confirmPassword, username, image_url, bio } =
     req.body;
@@ -31,29 +14,29 @@ module.exports.signup = (req, res, next) => {
   }
 
   if (!validateEmail(email)) {
-    errors.push({ msg: "The Email is not valid!" });
+    errors.push("The Email is not valid!");
   }
 
   if (password !== confirmPassword) {
-    errors.push({ msg: "Passwords don't match!" });
+    errors.push("Passwords don't match!");
   }
 
   if (password.length < 6) {
-    errors.push({ msg: "Password should be more than 6 characters!" });
+    errors.push("Password should be more than 6 characters!");
   }
 
   if (!username) {
-    errors.push({ msg: "Username is required!" });
+    errors.push("Username is required!");
   }
 
   if (errors.length > 0) {
-    res.json({ errors });
+    res.status(500).send(errors);
     return;
   }
 
   User.findOne({ email }, { _id: 1 }).then(user => {
     if (user) {
-      errors.push({ msg: "This email is already registered!" });
+      errors.push("This email is already registered!");
       res.send({ errors });
       return;
     }
@@ -73,6 +56,7 @@ module.exports.signup = (req, res, next) => {
         newUser
           .save()
           .then(user => {
+            delete user.password;
             res.json(user);
           })
           .catch(err => console.log(err));
@@ -84,6 +68,23 @@ module.exports.signup = (req, res, next) => {
       }
     });
   });
+};
+
+module.exports.login = (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(404).send("Incorrect email or password");
+    }
+    req.logIn(user, err => {
+      if (err) {
+        return next(err);
+      }
+      return res.send(user);
+    });
+  })(req, res, next);
 };
 
 module.exports.logout = (req, res, next) => {

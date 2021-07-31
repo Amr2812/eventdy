@@ -36,6 +36,7 @@ const miniEventSchema = mongoose.Schema({
  *      required:
  *        - email
  *        - password
+ *        - username
  *      properties:
  *        _id:
  *          type: objectId 
@@ -58,6 +59,35 @@ const miniEventSchema = mongoose.Schema({
  *        eventsAttended:
  *          type: array
  *          items:
+ *            $ref: "#/components/schemas/miniEvent"
+ */
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    User (Password Projected):
+ *      type: object
+ *      properties:
+ *        _id:
+ *          type: objectId 
+ *        email:
+ *          type: string
+ *        username:
+ *          type: string
+ *        image_url:
+ *          type: string
+ *        bio:
+ *          type: string
+ *        date:
+ *          type: date
+ *        eventsCreated:
+ *          type: array
+ *          items: 
+ *            $ref: "#/components/schemas/miniEvent"
+ *        eventsAttended:
+ *          type: array
+ *          items: 
  *            $ref: "#/components/schemas/miniEvent"
  */
 

@@ -22,28 +22,7 @@ const { requireAuth } = require("../middleware/auth");
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                _id:
- *                  type: objectId 
- *                email:
- *                  type: string
- *                username:
- *                  type: string
- *                image_url:
- *                  type: string
- *                bio:
- *                  type: string
- *                date:
- *                  type: date
- *                eventsCreated:
- *                  type: array
- *                  items: 
- *                    $ref: "#/components/schemas/miniEvent"
- *                eventsAttended:
- *                  type: array
- *                  items: 
- *                    $ref: "#/components/schemas/miniEvent"
+ *              $ref: "#/components/schemas/User (Password Projected)"
  *      401:
  *        description: Returns "Unauthorized!"
  */
@@ -62,28 +41,7 @@ router.get("/profile", requireAuth, userController.getUserProfile);
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                _id:
- *                  type: objectId 
- *                email:
- *                  type: string
- *                username:
- *                  type: string
- *                image_url:
- *                  type: string
- *                bio:
- *                  type: string
- *                date:
- *                  type: date
- *                eventsCreated:
- *                  type: array
- *                  items: 
- *                    $ref: "#/components/schemas/miniEvent"
- *                eventsAttended:
- *                  type: array
- *                  items: 
- *                    $ref: "#/components/schemas/miniEvent"
+ *              $ref: "#/components/schemas/User (Password Projected)"
  *      404:
  *        description: Returns "User not found!"
  *      401:
@@ -111,28 +69,7 @@ router.patch("/profile", requireAuth, userController.updateProfile);
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                _id:
- *                  type: objectId 
- *                email:
- *                  type: string
- *                username:
- *                  type: string
- *                image_url:
- *                  type: string
- *                bio:
- *                  type: string
- *                date:
- *                  type: date
- *                eventsCreated:
- *                  type: array
- *                  items: 
- *                    $ref: "#/components/schemas/miniEvent"
- *                eventsAttended:
- *                  type: array
- *                  items: 
- *                    $ref: "#/components/schemas/miniEvent"
+ *              $ref: "#/components/schemas/User (Password Projected)"
  *      404:
  *        description: Returns "User not found!"
  *      401:
