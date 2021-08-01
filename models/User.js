@@ -11,7 +11,7 @@ const mongoose = require("mongoose");
  *          type: objectId
  *        title:
  *          type: string
- *        about:
+ *        excerpt:
  *          type: string
  */
 
@@ -22,7 +22,7 @@ const miniEventSchema = mongoose.Schema({
   title: {
     type: String
   },
-  about: {
+  excerpt: {
     type: String
   }
 });

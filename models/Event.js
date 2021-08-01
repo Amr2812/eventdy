@@ -36,11 +36,45 @@ const miniUserSchema = mongoose.Schema({
  * @swagger
  * components:
  *  schemas:
+ *    Event Details:
+ *      type: object
+ *      required:
+ *        - title
+ *        - about
+ *        - excerpt
+ *        - location
+ *        - date
+ *        - endingDate
+ *        - category
+ *      properties: 
+ *        _id:
+ *          type: objectId 
+ *        title:
+ *          type: string
+ *        about:
+ *          type: string
+ *        excerpt:
+ *          type: string
+ *        location:
+ *          type: string
+ *        date:
+ *          type: string
+ *        endingDate:
+ *          type: string
+ *        category:
+ *          type: string
+ */
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
  *    Event Details (with organizer):
  *      type: object
  *      required:
  *        - title
  *        - about
+ *        - excerpt
  *        - location
  *        - date
  *        - endingDate
@@ -48,10 +82,12 @@ const miniUserSchema = mongoose.Schema({
  *        - organizer
  *      properties: 
  *        _id:
- *          type: objectId 
+ *          type: objectId
  *        title:
  *          type: string
  *        about:
+ *          type: string
+ *        excerpt:
  *          type: string
  *        location:
  *          type: string
@@ -69,41 +105,12 @@ const miniUserSchema = mongoose.Schema({
  * @swagger
  * components:
  *  schemas:
- *    Event Details:
- *      type: object
- *      required:
- *        - title
- *        - about
- *        - location
- *        - date
- *        - endingDate
- *        - category
- *      properties: 
- *        _id:
- *          type: objectId 
- *        title:
- *          type: string
- *        about:
- *          type: string
- *        location:
- *          type: string
- *        date:
- *          type: string
- *        endingDate:
- *          type: string
- *        category:
- *          type: string
- */
-
-/**
- * @swagger
- * components:
- *  schemas:
  *    Event:
  *      type: object
  *      required:
  *        - title
  *        - about
+ *        - excerpt
  *        - location
  *        - date
  *        - endingDate
@@ -114,6 +121,8 @@ const miniUserSchema = mongoose.Schema({
  *        title:
  *          type: string
  *        about:
+ *          type: string
+ *        excerpt:
  *          type: string
  *        location:
  *          type: string
@@ -137,16 +146,19 @@ const eventSchema = mongoose.Schema({
     unique: true
   },
   about: {
-    type: String,
+    type: String
+  },
+  excerpt: {
+    type: String
   },
   location: {
-    type: String,
+    type: String
   },
   date: {
-    type: Date,
+    type: Date
   },
   endingDate: {
-    type: Date,
+    type: Date
   },
   category: {
     type: String

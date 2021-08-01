@@ -31,7 +31,7 @@ const { requireAuth } = require("../middleware/auth");
  *            schema:
  *              $ref: "#/components/schemas/Event"
  *      500:
- *        description: Returns "Event name already exists!"
+ *        description: Returns "You have to fill all fields!" or "Excerpt maximium length is 300 characters!" or "Event name already exists!"
  */
 
 router.post("/event", requireAuth, eventController.newEvent);
@@ -63,7 +63,23 @@ router.post("/event", requireAuth, eventController.newEvent);
  *            schema:
  *              type: array
  *              items: 
- *                $ref: "#/components/schemas/Event Details"
+ *                schema: 
+ *                  properties: 
+ *                    _id:
+ *                      type: objectId 
+ *                    title:
+ *                      type: string
+ *                    excerpt:
+ *                      type: string
+ *                      maxLength: 300
+ *                    location:
+ *                      type: string
+ *                    date:
+ *                      type: string
+ *                    endingDate:
+ *                      type: string
+ *                    category:
+ *                      type: string
  *      404:
  *        description: Returns "No Events match this query!"
  */

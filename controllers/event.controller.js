@@ -2,10 +2,18 @@ const Event = require("../models/Event");
 const User = require("../models/User");
 
 module.exports.newEvent = async (req, res) => {
-  const { title, about, location, date, endingDate, category } = req.body;
+  const { title, about, excerpt, location, date, endingDate, category } =
+    req.body;
 
-  if (!(title && about && location && date && endingDate && category)) {
+  if (
+    !(title && about && excerpt && location && date && endingDate && category)
+  ) {
     res.status(500).send("You have to fill all fields!");
+    return;
+  }
+
+  if (excerpt.length > 300) {
+    res.status(500).send("Excerpt maximium length is 300 characters!");
     return;
   }
 
@@ -24,6 +32,7 @@ module.exports.newEvent = async (req, res) => {
     const event = new Event({
       title,
       about,
+      excerpt,
       location,
       date,
       endingDate,
@@ -66,7 +75,8 @@ module.exports.getEvents = (req, res) => {
     {
       $project: {
         attenders: 0,
-        organizer: 0
+        organizer: 0,
+        about: 0
       }
     }
   ];
