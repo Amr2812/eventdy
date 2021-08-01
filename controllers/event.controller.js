@@ -12,7 +12,7 @@ module.exports.newEvent = async (req, res) => {
   try {
     const eventCheck = await Event.findOne({ title }, { _id: 1 });
     if (eventCheck) {
-      res.status(500).send("Event name already exist!");
+      res.status(500).send("Event name already exists!");
       return;
     }
 
@@ -43,7 +43,7 @@ module.exports.newEvent = async (req, res) => {
 };
 
 module.exports.getEvents = (req, res) => {
-  const { search, categories } = req.query;
+  const { search, category } = req.query;
   let { page } = req.query;
 
   if (!page) page = 1;
@@ -65,15 +65,20 @@ module.exports.getEvents = (req, res) => {
     },
     {
       $project: {
-        attenders: 0
+        attenders: 0,
+        organizer: 0
       }
     }
   ];
 
-  if (categories && categories.length > 1) {
-    query[0].$match.category = {
-      $in: categories
-    };
+  if (category && category.length > 0) {
+    if (typeof category === "object") {
+      query[0].$match.category = {
+        $in: category
+      };
+    } else {
+      query[0].$match.category = category;
+    }
   }
 
   if (search) {
@@ -87,20 +92,24 @@ module.exports.getEvents = (req, res) => {
   }
 
   Event.aggregate(query)
-    .then(events => res.send(events))
+    .then(events =>
+      events.length > 0
+        ? res.send(events)
+        : res.status(404).send("No Events match this query!")
+    )
     .catch(err => res.status(500).send(err));
 };
 
 module.exports.getEventDetails = (req, res) => {
   Event.findById(req.params.id, { attenders: 0 })
     .then(event => res.send(event))
-    .catch(err => res.send(err));
+    .catch(err => res.status(404).send("Event not found!"));
 };
 
 module.exports.getEventAttenders = (req, res) => {
   Event.findById(req.params.id, { attenders: 1 })
     .then(event => res.send(event))
-    .catch(err => res.send(err));
+    .catch(err => res.status(404).send("Event not found!"));
 };
 
 module.exports.updateEvent = async (req, res) => {
@@ -112,9 +121,10 @@ module.exports.updateEvent = async (req, res) => {
       return;
     }
 
-    await Event.findByIdAndUpdate(event._id, req.body);
+    const updatedEvent = await Event.findByIdAndUpdate(event._id, req.body);
 
-    res.send("Event Updated");
+    delete updatedEvent.attenders;
+    res.send(updatedEvent);
   } catch (err) {
     res.status(404).send("Event not found!");
   }
@@ -138,8 +148,8 @@ module.exports.attendEvent = async (req, res) => {
     user.eventsAttended.push(event);
     await user.save();
 
-    res.send("success!");
+    res.send("OK");
   } catch (err) {
-    res.status(404).send("Couldn't find Event!");
+    res.status(404).send("Event not find!");
   }
 };

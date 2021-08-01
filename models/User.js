@@ -51,7 +51,7 @@ const miniEventSchema = mongoose.Schema({
  *        bio:
  *          type: string
  *        date:
- *          type: date
+ *          type: string
  *        eventsCreated:
  *          type: array
  *          items: 
@@ -80,7 +80,7 @@ const miniEventSchema = mongoose.Schema({
  *        bio:
  *          type: string
  *        date:
- *          type: date
+ *          type: string
  *        eventsCreated:
  *          type: array
  *          items: 
