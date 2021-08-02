@@ -6,7 +6,7 @@ const User = require("../models/User");
 module.exports = passport => {
   passport.use(
     new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-      User.findOne({ email }, { password: 0 })
+      User.findOne({ email })
         .then(user => {
           if (!user) {
             return done(null, false, {
@@ -16,6 +16,7 @@ module.exports = passport => {
           bcrypt.compare(password, user.password, (err, isAuthenticated) => {
             if (err) throw err;
             if (isAuthenticated) {
+              delete user.password;
               return done(null, user);
             } else {
               return done(null, false, { message: "Password Incorrect" });
