@@ -122,14 +122,14 @@ module.exports.getEventAttenders = (req, res) => {
 
 module.exports.updateEvent = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id, { organizer: 1 });
+    const event = await Event.findById(req.params.id, { attenders: 0 });
 
     if (event.organizer._id != req.user.id) {
       res.status(401).send("Unauthorized to edit the event!");
       return;
     }
 
-    const updatedEvent = await Event.findByIdAndUpdate(event._id, req.body);
+    const updatedEvent = await Event.findByIdAndUpdate(event._id, req.body, { new: true });
 
     delete updatedEvent.attenders;
     res.send(updatedEvent);
