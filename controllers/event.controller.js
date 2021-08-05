@@ -142,21 +142,24 @@ module.exports.updateEvent = async (req, res) => {
 
 module.exports.attendEvent = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const eventCheck = await Event.findOne({ "attenders._id": req.user.id });
+
+    if (eventCheck) {
+      res.status(500).send("You are already an attender to this event!");
+      return;
+    }
 
     const event = await Event.findByIdAndUpdate(req.params.eventId, {
       $push: {
-        attenders: {
-          _id: user._id,
-          image_url: user.image_url,
-          username: user.username,
-          bio: user.bio
-        }
+        attenders: req.user
       }
     });
 
-    user.eventsAttended.push(event);
-    await user.save();
+    await User.findByIdAndUpdate(req.user.id, {
+      $push: {
+        eventsAttended: event
+      }
+    });
 
     res.send("OK");
   } catch (err) {

@@ -140,6 +140,8 @@ router.get("/event/:id", eventController.getEventDetails);
  *                    $ref: "#/components/schemas/miniUser"
  *      404:
  *        description: Returns "Event not found!"
+ *      500:
+ *        description: Returns: "You are already an attender to this event!"
  */
 
 router.get("/event-attenders/:id", eventController.getEventAttenders);
