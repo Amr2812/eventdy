@@ -39,7 +39,7 @@ module.exports.newEvent = async (req, res) => {
 
     await User.findByIdAndUpdate(req.user.id, {
       $push: {
-        eventscreated: event
+        eventsCreated: event
       }
     });
 
