@@ -24,11 +24,6 @@ module.exports.newEvent = async (req, res) => {
       return;
     }
 
-    const user = await User.findById(req.user.id, {
-      eventsAttended: 0,
-      password: 0
-    });
-
     const event = new Event({
       title,
       about,
@@ -37,13 +32,16 @@ module.exports.newEvent = async (req, res) => {
       date,
       endingDate,
       category,
-      organizer: user
+      organizer: req.user
     });
 
     const doc = await event.save();
 
-    user.eventsCreated.push(event);
-    await user.save();
+    await User.findByIdAndUpdate(req.user.id, {
+      $push: {
+        eventscreated: event
+      }
+    });
 
     res.send(doc);
   } catch (err) {

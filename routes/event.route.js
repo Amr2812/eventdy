@@ -141,7 +141,7 @@ router.get("/event/:id", eventController.getEventDetails);
  *      404:
  *        description: Returns "Event not found!"
  *      500:
- *        description: Returns: "You are already an attender to this event!"
+ *        description: Returns "You are already an attender to this event!"
  */
 
 router.get("/event-attenders/:id", eventController.getEventAttenders);

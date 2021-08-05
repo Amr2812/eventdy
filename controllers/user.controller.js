@@ -1,9 +1,7 @@
 const User = require("../models/User");
 
 module.exports.getUserProfile = (req, res) => {
-  User.findById(req.user.id, { password: 0 })
-    .then(user => res.send(user))
-    .catch(err => res.status(404).send("User not found!"));
+  res.send(req.user);
 };
 
 module.exports.getProfile = (req, res) => {
