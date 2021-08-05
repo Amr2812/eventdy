@@ -176,6 +176,30 @@ router.patch("/event/:id", requireAuth, eventController.updateEvent);
 
 /**
  * @swagger
+ * /event/{id}:
+ *  delete:
+ *    summary: Delete Event
+ *    tags: [Events]
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema: 
+ *          type: string
+ *          required: true
+ *          description: Event's Id
+ *    responses:
+ *      200:
+ *        description: Returns "Deleted!"
+ *      401:
+ *        description: Returns "Unauthorized!" or "Unauthorized to delete the event!"
+ *      404:
+ *        description: Returns "Event not found!"
+ */
+
+router.delete("/event/:id", requireAuth, eventController.deleteEvent);
+
+/**
+ * @swagger
  * /attend/{eventId}:
  *  post:
  *    summary: Attend Event

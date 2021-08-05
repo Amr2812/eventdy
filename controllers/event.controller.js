@@ -138,6 +138,23 @@ module.exports.updateEvent = async (req, res) => {
   }
 };
 
+module.exports.deleteEvent = async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id, { organizer: 1 });
+
+    if (event.organizer._id != req.user.id) {
+      res.status(401).send("Unauthorized to delete the event!");
+      return;
+    }
+
+    await Event.findByIdAndDelete(event._id);
+
+    res.send("Deleted!");
+  } catch (err) {
+    res.status(404).send("Event not found!");
+  }
+};
+
 module.exports.attendEvent = async (req, res) => {
   try {
     const eventCheck = await Event.findOne({ "attenders._id": req.user.id });
