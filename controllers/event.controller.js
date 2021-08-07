@@ -32,7 +32,7 @@ module.exports.newEvent = async (req, res) => {
       date,
       endingDate,
       category,
-      organizer: req.user
+      organizer: req.user.id
     });
 
     const doc = await event.save();
@@ -43,9 +43,18 @@ module.exports.newEvent = async (req, res) => {
       }
     });
 
-    res.send(doc);
+    // doc.organizer.eventsCreated = undefined;
+    // doc.organizer.eventsAttended = undefined;
+    // doc.organizer.email = undefined;
+    // doc.organizer.date = undefined;
+    const populatedEvent = await doc.populate({
+      path: "organizer",
+      select: { image_url: 1, username: 1, bio: 1 }
+    }).execPopulate();
+
+    res.send(populatedEvent);
   } catch (err) {
-    res.send(err);
+    res.status(500).send(err);
   }
 };
 
@@ -110,26 +119,51 @@ module.exports.getEvents = (req, res) => {
 
 module.exports.getEventDetails = (req, res) => {
   Event.findById(req.params.id, { attenders: 0 })
+    .populate({
+      path: "organizer",
+      select: {
+        image_url: 1,
+        username: 1,
+        bio: 1
+      }
+    })
     .then(event => res.send(event))
     .catch(err => res.status(404).send("Event not found!"));
 };
 
 module.exports.getEventAttenders = (req, res) => {
   Event.findById(req.params.id, { attenders: 1 })
+    .populate({
+      path: "attenders",
+      select: {
+        image_url: 1,
+        username: 1,
+        bio: 1
+      }
+    })
     .then(event => res.send(event))
     .catch(err => res.status(404).send("Event not found!"));
 };
 
 module.exports.updateEvent = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id, { attenders: 0 });
+    const event = await Event.findById(req.params.id, {
+      attenders: 0
+    }).populate({
+      path: "organizer",
+      select: {
+        _id: 1
+      }
+    });
 
     if (event.organizer._id != req.user.id) {
       res.status(401).send("Unauthorized to edit the event!");
       return;
     }
 
-    const updatedEvent = await Event.findByIdAndUpdate(event._id, req.body, { new: true });
+    const updatedEvent = await Event.findByIdAndUpdate(event._id, req.body, {
+      new: true
+    });
 
     delete updatedEvent.attenders;
     res.send(updatedEvent);
@@ -140,7 +174,9 @@ module.exports.updateEvent = async (req, res) => {
 
 module.exports.deleteEvent = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id, { organizer: 1 });
+    const event = await Event.findById(req.params.id, {
+      organizer: 1
+    }).populate("organizer");
 
     if (event.organizer._id != req.user.id) {
       res.status(401).send("Unauthorized to delete the event!");
@@ -148,6 +184,15 @@ module.exports.deleteEvent = async (req, res) => {
     }
 
     await Event.findByIdAndDelete(event._id);
+
+    await User.findByIdAndUpdate(req.user.id, {
+      $pull: { eventsCreated: event._id }
+    });
+
+    await User.updateMany(
+      { eventsAttended: event._id },
+      { $pull: { eventsAttended: event._id } }
+    );
 
     res.send("Deleted!");
   } catch (err) {

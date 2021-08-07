@@ -4,33 +4,6 @@ const mongoose = require("mongoose");
  * @swagger
  * components:
  *  schemas:
- *    miniEvent:
- *      type: object
- *      properties:
- *        _id:
- *          type: objectId
- *        title:
- *          type: string
- *        excerpt:
- *          type: string
- */
-
-const miniEventSchema = mongoose.Schema({
-  _id: {
-    type: mongoose.Types.ObjectId
-  },
-  title: {
-    type: String
-  },
-  excerpt: {
-    type: String
-  }
-});
-
-/**
- * @swagger
- * components:
- *  schemas:
  *    User:
  *      type: object
  *      required:
@@ -91,6 +64,23 @@ const miniEventSchema = mongoose.Schema({
  *            $ref: "#/components/schemas/miniEvent"
  */
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    miniUser:
+ *      type: object
+ *      required:
+ *        - username
+ *      properties: 
+ *        _id:
+ *          type: objectId
+ *        image_url:
+ *          type: string
+ *        bio:
+ *          type: string
+ */
+
 const userSchema = mongoose.Schema({
   email: {
     type: String,
@@ -112,8 +102,8 @@ const userSchema = mongoose.Schema({
     type: Date,
     default: Date.now()
   },
-  eventsCreated: [miniEventSchema],
-  eventsAttended: [miniEventSchema]
+  eventsCreated: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }],
+  eventsAttended: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }]
 });
 
 const User = mongoose.model("User", userSchema);

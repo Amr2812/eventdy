@@ -7,6 +7,20 @@ module.exports = passport => {
   passport.use(
     new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
       User.findOne({ email })
+        .populate({
+          path: "eventsCreated",
+          select: {
+            title: 1,
+            excerpt: 1
+          }
+        })
+        .populate({
+          path: "eventsAttended",
+          select: {
+            title: 1,
+            excerpt: 1
+          }
+        })
         .then(user => {
           if (!user) {
             return done(null, false, {
