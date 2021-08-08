@@ -43,10 +43,6 @@ module.exports.newEvent = async (req, res) => {
       }
     });
 
-    // doc.organizer.eventsCreated = undefined;
-    // doc.organizer.eventsAttended = undefined;
-    // doc.organizer.email = undefined;
-    // doc.organizer.date = undefined;
     const populatedEvent = await doc.populate({
       path: "organizer",
       select: { image_url: 1, username: 1, bio: 1 }

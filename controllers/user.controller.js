@@ -1,7 +1,7 @@
 const User = require("../models/User");
 
 module.exports.getUserProfile = async (req, res) => {
-  User.findById(id, { password: 0 })
+  User.findById(req.user.id, { password: 0 })
     .populate({
       path: "eventsCreated",
       select: {
